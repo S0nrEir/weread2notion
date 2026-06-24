@@ -3,6 +3,13 @@ setlocal EnableExtensions
 
 cd /d "%~dp0"
 
+rem Bypass Windows system proxy for this run.
+set NO_PROXY=*
+set no_proxy=*
+set HTTP_PROXY=
+set HTTPS_PROXY=
+set ALL_PROXY=
+
 echo [1/3] Checking local environment...
 if not exist "keys" (
   echo [ERROR] Missing keys file in repo root.
@@ -11,7 +18,7 @@ if not exist "keys" (
 
 if not exist ".venv\Scripts\weread2notion.exe" (
   echo [ERROR] Missing .venv\Scripts\weread2notion.exe
-  echo Run dependency install first.
+  echo Run install_weread.bat first.
   goto :fail
 )
 
@@ -66,7 +73,7 @@ if "%SYNC_EXIT%"=="0" (
 
 echo [3/3] Sync failed with exit code %SYNC_EXIT%.
 echo Hints:
-echo - Start VPN or proxy first if Notion API is blocked.
+echo - If Clash/VPN is on, this script bypasses the Windows proxy and uses direct access.
 echo - Check keys format and credential validity.
 echo - Verify required Notion properties: BookId and Sort.
 goto :end
@@ -78,3 +85,4 @@ set "SYNC_EXIT=1"
 echo.
 pause
 exit /b %SYNC_EXIT%
+
